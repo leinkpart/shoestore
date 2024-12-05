@@ -1,0 +1,180 @@
+﻿@model ShoeStore.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Đăng ký</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Thêm FontAwesome để sử dụng icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url('https://i.imgur.com/x769mkF.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .signup-form {
+            background: rgba(75, 75, 75, 0.4); /* Nền trong suốt */
+            padding: 40px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .signup-form h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .input-group input {
+                width: 91.5%;
+                padding: 10px 15px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 16px;
+                background: transparent;
+                color: #FBFBFB;
+            }
+
+            .input-group label {
+                position: absolute;
+                left: 15px;
+                top: 10px;
+                font-size: 14px;
+                color: #aaa;
+                transition: all 0.3s;
+            }
+
+            .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
+                top: -15px;
+                left: 10px;
+                font-size: 12px;
+                color: #4CAF50;
+            }
+
+        /*.input-group input[type="password"] {
+                padding-left: 35px;*/ /*Khoảng trống cho icon mắt */
+        /*}*/
+
+        .eye-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .signup-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .signup-form button:hover {
+                background-color: #45a049;
+            }
+
+        .signup-form p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .signup-form a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+            .signup-form a:hover {
+                text-decoration: underline;
+            }
+
+        .error-message {
+            margin: 5px;
+            font-size: 13px;
+            color: red;
+        }
+
+        p {
+            font-size: 13px
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-form">
+        <h2 style="color: #4CAF50;">Đăng ký</h2>
+        <p>Mật khẩu phải có ít nhất 8 ký tự, 1 chữ cái in hoa, 1 chữ cái thường, 1 chữ số và 1 ký tự bặc biệt</p>
+        <form method="POST" action="/Account/Register">
+            <div class="input-group">
+                <input type="text" name="userName" id="userName" placeholder=" " required />
+                <label for="userName">Tên người dùng</label>
+            </div>
+
+            <span class="text-danger error-message">@TempData["error2"]</span>
+            <div class="input-group">
+                <input type="email" name="email" id="email" placeholder=" " required />
+                <label for="email">Email</label>
+            </div>
+
+            <span class="text-danger error-message">@TempData["error3"]</span>
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder=" " required />
+                <label for="password">Mật khẩu</label>
+                <span class="eye-icon" onclick="togglePassword('password')"><i class="eye-icon fas fa-eye"></i></span>
+            </div>
+
+            <span class="text-danger error-message">@TempData["error4"]</span>
+            <div class="input-group">
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder=" " required />
+                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                <span class="eye-icon" onclick="togglePassword('confirmPassword')"><i class="eye-icon fas fa-eye"></i></span>
+            </div>
+            <button type="submit">Đăng ký</button>
+        </form>
+        <p>Đã có tài khoản? <a href="/Account/Login">Đăng nhập</a></p>
+    </div>
+
+    <script>
+        // Hàm để hiển thị/ẩn mật khẩu
+        function togglePassword(inputId) {
+            var input = document.getElementById(inputId);
+            var icon = event.target; // Lấy icon được bấm
+            var type = input.type === "password" ? "text" : "password";
+            input.type = type;
+
+            // Thay đổi icon mắt
+            if (type === "password") {
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+    </script>
+</body>
+</html>

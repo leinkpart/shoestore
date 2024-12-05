@@ -1,0 +1,173 @@
+﻿@model IEnumerable<ShoeStore.Models.Product>
+
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <!-- Banner tự động chuyển đổi -->
+    <div id="homeCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4500">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/images/banner/banner1.jpg" class="d-block w-100" alt="Giảm giá 50% giày nam">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    <h5 class="text-light">Khuyến mãi lớn!</h5>
+                    <p>Giảm giá lên đến 50% cho giày nam.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/images/banner/banner2.jpg" class="d-block w-100" alt="Giày thể thao mới">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    <h5 class="text-light">Giày thể thao mới</h5>
+                    <p>Bộ sưu tập thể thao hiện đại nhất.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/images/banner/banner3.jpg" class="d-block w-100" alt="Giày nữ thời trang">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    <h5 class="text-light">Giày nữ thời trang</h5>
+                    <p>Khám phá vẻ đẹp và phong cách.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/images/banner/banner4.jpg" class="d-block w-100" alt="Sản phẩm mới">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    <h5 class="text-light">Sản phẩm mới</h5>
+                    <p>Hãy là người đầu tiên sở hữu.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/images/banner/banner5.jpg" class="d-block w-100" alt="Giày trẻ em">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    <h5 class="text-light">Giày trẻ em</h5>
+                    <p>Mẫu mã đa dạng cho trẻ em.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="text-center mt-5">
+        <h1 class="mb-3">@ViewBag.Title</h1>
+        <p class="lead">Chào mừng đến với cửa hàng giày ShoeStore!</p>
+    </div>
+    
+    <div>
+        <h2>Sản phẩm mới</h2>
+    </div>
+    <!-- Sản phẩm nổi bật -->
+    <div class="row g-4 mt-4">
+        @foreach (var sp in Model)
+        {
+            bool isLoved = ViewBag.LovedProductIds != null && ((List<int>)ViewBag.LovedProductIds).Contains(sp.ProductID);
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <img src="~/images/@sp.ImageURL" class="card-img-top" alt="Giày nam">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            @sp.Name 
+                        </h5>
+                        <p class="card-text">Xem các mẫu giày thời trang dành cho nam.</p>
+                        <div class="card-footer justify-content-center align-items-center">
+                            <i class="bi @(isLoved ? "bi-heart-fill text-danger" : "bi-heart") toggle-love" 
+                               data-product-id="@sp.ProductID"
+                               title="@(isLoved ? "Xóa khỏi bộ sưu tập" : "Thêm vào bộ sưu tập")">
+                            </i>
+                            <a href="@Url.Action("ProductDetail","Product", new { id = sp.ProductID})" class="btn btn-primary mx-2">
+                                Xem ngay
+                            </a>
+                            <a href="@Url.Action("AddToCart", "Cart", new { id = sp.ProductID,  url = Request.Url.ToString() })">
+                                <i class="bi bi-cart-plus icon-right" title="Thêm vào giỏ hàng"></i>
+                            </a>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #D4F6FF;
+    }
+
+    .g-4 {
+        background-color: #FBFBFB;
+        padding: 5px;
+        padding-bottom: 10px;
+        border-radius: 10px
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Đảm bảo card chiếm toàn bộ chiều cao */
+    }
+
+    .card-img-top {
+        padding: 15px;
+        width: 100%; 
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card-img-top:hover {
+            transform: scale(1.05); 
+        }
+
+    .card-body {
+        flex: 0 1 auto;
+        flex-grow: 1;
+    }
+
+    .card-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        border-radius: 30px;
+    }
+
+    .icon-left, .icon-right {
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    .icon-left {
+        margin-right: 15px;
+    }
+
+    .icon-right {
+        margin-left: 15px;
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+</style>
+

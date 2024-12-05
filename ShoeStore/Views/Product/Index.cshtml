@@ -1,0 +1,177 @@
+﻿@model IEnumerable<ShoeStore.Models.Product>
+
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var brands = ViewBag.Brands as List<ShoeStore.Models.Brand>;
+    var selectedBrands = ViewBag.SelectedBrands as string[];
+    var priceRange = ViewBag.PriceRange as string;
+}
+
+
+
+<div class="row" style="margin-top: 80px">
+    <!-- Sidebar -->
+    <div class="col-md-2 position-fixed" style="z-index: 100">
+        <h3 class="text-dark">Lọc theo</h3>
+        <form method="get">
+            <h5>Thương hiệu</h5>
+            @foreach (var brand in brands)
+            {
+                <div>
+                    <label>
+                        <input type="checkbox" name="selectedBrands" value="@brand.Name"
+                               @(selectedBrands.Contains(brand.Name) ? "checked" : "") />
+                        @brand.Name
+                    </label>
+                </div>
+            }
+
+            <h5>Giá cả</h5>
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="0-1000000000" @(priceRange == "0-1000000000" ? "checked" : "") /> all
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="0-1000000" @(priceRange == "0-1000000" ? "checked" : "") /> 0 - 1tr
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="1000001-5000000" @(priceRange == "1000001-5000000" ? "checked" : "") /> 1tr - 5tr
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="5000001-15000000" @(priceRange == "5000001-15000000" ? "checked" : "") /> 5tr - 15tr
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="15000001-45000000" @(priceRange == "15000001-45000000" ? "checked" : "") /> 15tr - 45tr
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="radio" name="priceRange" value="45000001-1000000000" @(priceRange == "45000001-1000000000" ? "checked" : "") /> > 45tr
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lọc</button>
+        </form>
+    </div>
+
+    <!-- Products List -->
+    <div class="col-md-10" style=" margin-left: 16.66666667% ">
+        <h2>SẢN PHẨM</h2>
+        <p>Tìm <strong>@ViewBag.ProductCount</strong> sản phẩm</p>
+        <div class="row">
+            @foreach (var sp in Model)
+            {
+                bool isLoved = ViewBag.LovedProductIds != null && ((List<int>)ViewBag.LovedProductIds).Contains(sp.ProductID);
+
+                <div class="col-md-3" style="margin: 10px 0">
+                    <div class="card product-card h-100 shadow-sm">
+                        <img src="~/images/@sp.ImageURL" class="card-img-top" alt="Giày nam">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">
+                                @sp.Name
+                            </h5>
+                            <p class="card-text">Xem các mẫu giày thời trang được ưa chuộng hiện nay.</p>
+                            <p>Brand: @sp.Brand.Name</p>
+
+                            <p>Price: @sp.Price.ToString("#,0" + " ₫")</p>
+                            <div class="card-footer justify-content-center align-items-center">
+                                <i class="bi @(isLoved ? "bi-heart-fill text-danger" : "bi-heart") toggle-love"
+                                   data-product-id="@sp.ProductID"
+                                   title="@(isLoved ? "Xóa khỏi bộ sưu tập" : "Thêm vào bộ sưu tập")">
+                                </i>
+                                <a href="@Url.Action("ProductDetail","Product", new { id = sp.ProductID})" class="btn btn-primary mx-2">
+                                    Xem ngay
+                                </a>
+                                <a href="@Url.Action("AddToCart", "Cart", new { id = sp.ProductID,  url = Request.Url.ToString() })">
+                                    <i class="bi bi-cart-plus icon-right" title="Thêm vào giỏ hàng"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #D4F6FF;
+    }
+
+    .col-md-2 {
+        margin-left: 20px;
+    }
+
+    .col-md-10 {
+        background-color: #FBFBFB;
+        padding: 5px 15px;
+        padding-bottom: 10px;
+        border-radius: 10px
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Đảm bảo card chiếm toàn bộ chiều cao */
+    }
+
+    .product-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-img-top {
+        padding: 15px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .card-body {
+        flex: 0 1 auto;
+        flex-grow: 1;
+    }
+
+    .card-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        border-radius: 30px;
+    }
+
+    .icon-left, .icon-right {
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    .icon-left {
+        margin-right: 15px;
+    }
+
+    .icon-right {
+        margin-left: 15px;
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+</style>
+

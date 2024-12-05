@@ -1,0 +1,222 @@
+﻿@{
+    var userName = ViewBag.UserName;
+}
+
+<div class="container-fluid">
+    <h3>Shoe Store</h3>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="@Url.Action("Index","Home")">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Index","Product")">Sản phẩm</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("WishList","LoveProduct")">Bộ sưu tập</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Giới thiệu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Liên hệ</a>
+            </li>
+            <li></li>
+        </ul>
+
+        <form class="d-flex" action="@Url.Action("Index", "Search")" method="get">
+            <input class="search-input" type="search" name="query" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" required>
+            <button class="search-button" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item nav-nav">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-bell"></i> <!-- Icon Chuông -->
+                </a>
+            </li>
+
+            <li class="nav-item cart-box nav-nav">
+                @Html.Action("_QtyItem", "Cart")
+            </li>
+
+            <li class="nav-item dropdown nav-nav">
+                <a class="nav-link dropdown-toggle user-icon" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle" title="@userName"></i> <!-- Icon User -->
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="profileDropdown">
+                    @if (!string.IsNullOrEmpty(userName))
+                    {
+                        <li><span style="color: azure; padding-left: 10px">Hi, @userName!</span></li>
+                        <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                        <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Đăng xuất</a></li>
+                    }
+                    else
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Login", "Account")">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Register", "Account")">Đăng ký</a></li>
+                    }
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+    </div>
+
+<!-- Custom CSS -->
+<style>
+    h3 {
+        color: #fff;
+        margin-right: 20px
+    }
+
+    .nav-link.active {
+        color: #fff; /* Màu của liên kết được chọn */
+    }
+
+    .user-icon i, .bi-bell, .bi-cart {
+        font-size: 1.5rem;
+        color: #FBFBFB;
+    }
+
+        .user-icon i:hover, .bi-bell:hover, .bi-cart:hover .nav-link:hover {
+            color: cyan;
+        }
+
+    /* Tùy chỉnh dropdown */
+    .custom-dropdown {
+        background-color: #818FB4; /* Màu nền của dropdown */
+        border-radius: 5px;
+        width: 250px;
+        padding: 5px
+    }
+
+        .custom-dropdown .dropdown-item {
+            color: #FBFBFB;
+            font-size: 1.1rem; /* Tăng kích thước chữ */
+            padding: 10px;
+            border-radius: 5px
+        }
+
+            .custom-dropdown .dropdown-item:hover {
+                background-color: #B9B4C7; /* Màu nền khi hover */
+                color: cyan; /* Màu chữ khi hover */
+            }
+
+    .d-flex {
+        display: flex;
+        align-items: center;
+        background: linear-gradient(to right, #4facfe, #00f2fe); /* Gradient màu */
+        border-radius: 30px; /* Bo góc tròn */
+        padding: 0 6px 0 3px;
+        width: 300px;
+        height: 40px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+        margin-left: 30px
+    }
+
+    .nav-nav {
+        margin: 0 10px;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        border-radius: 30px; /* Đảm bảo bo góc khớp */
+        padding: 0 15px;
+        font-size: 16px;
+        color: #333;
+        height: 35px
+    }
+
+    .search-button {
+        background: none;
+        border: none;
+        outline: none;
+        border-radius: 50%;
+        padding: 5px;
+        cursor: pointer;
+        color: white; /* Màu biểu tượng */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .search-button i {
+            font-size: 20px; /* Kích thước biểu tượng */
+        }
+
+        /* Hiệu ứng hover */
+        .search-button:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+        }
+
+    .nav-item .nav-link:hover {
+        color: #fff
+    }
+
+    .cart-box {
+        position: relative;
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+        background-color: #dc7742;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+    .cart-item {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const underline = document.querySelector('.underline');
+
+        function moveUnderline(link) {
+            const linkRect = link.getBoundingClientRect();
+            const navRect = link.closest('.nav-wrapper').getBoundingClientRect();
+            underline.style.width = `${linkRect.width}px`;
+            underline.style.left = `${linkRect.left - navRect.left}px`;
+        }
+
+        // Thiết lập underline ban đầu
+        moveUnderline(navLinks[0]);
+
+        // Lắng nghe sự kiện click trên các liên kết
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                // Xóa class 'active' khỏi tất cả các liên kết
+                navLinks.forEach(item => item.classList.remove('active'));
+
+                this.classList.add('active');
+                moveUnderline(this);
+            });
+        });
+    });
+</script>

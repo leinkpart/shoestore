@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<ShoeStore.Models.Product>
+
+<h2>Tìm kiếm sản phẩm</h2>
+
+@if (ViewBag.ProductCount == null)
+{
+    <p>Không tìm thấy sản phẩm nào với từ khóa.</p>
+}
+else
+{
+    <p>Tìm thấy <strong>@ViewBag.ProductCount</strong> sản phẩm.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/images/@product.ImageURL" alt="@product.Name" width="50" height="50" />
+                    </td>
+                    <td>@product.Name</td>
+                    <td>@product.Price.ToString("#,0" + " ₫")</td>
+                    <td>
+                        <a href="@Url.Action("ProductDetail", "Product", new { id = product.ProductID })" class="btn btn-info btn-sm">Chi tiết</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<style>
+    img {
+        width: 100px;
+        height: auto;
+    }
+</style>
+
+

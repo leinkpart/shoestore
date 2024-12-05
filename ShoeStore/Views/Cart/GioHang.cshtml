@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using ShoeStore.Models;
+@model List<GioHang>
+
+<h2 class="text-center mb-4" style="margin-top: 85px; font-weight: bold; color: #007bff;">Giỏ hàng của bạn</h2>
+
+@if (Model.Count == 0)
+{
+    <div class="text-center mt-5">
+        <p>Giỏ hàng hiện đang trống.</p>
+        <img src="~/images/logo/cart-empty.gif" alt="Giỏ hàng trống" class="img-fluid" width="300" />
+        <br />
+        @Html.ActionLink("Quay lại mua sắm", "Index", "Product", null, new { @class = "btn btn-primary mt-4 px-4 py-2 shadow-sm" })
+    </div>
+}
+else
+{
+    <div class="container shadow-lg rounded p-4" style="background: #fff;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng cộng</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="~/images/@item.ImageURL" alt="@item.Name" class="img-fluid" width="80" />
+                        </td>
+                        <td class="txtName">@item.Name</td>
+                        <td>@item.Price.ToString("#,0" + " ₫")</td>
+                        <td>
+                            <form action="@Url.Action("UpdateCart", "Cart")" method="post">
+                                <input type="hidden" name="id" value="@item.ProductID" />
+                                <div class="align-items-center qtyUpdate">
+                                    <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm" style="width: 80px;" />
+                                    <button type="submit" class="btn-update">
+                                        <i class="bi bi-arrow-repeat" style="font-size: 18px; color: #4837f1;"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                        <td class="text-success font-weight-bold">@item.Total.ToString("#,0" + " ₫")</td>
+                        <td>
+                            <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.ProductID })" class="btn btn-danger btn-sm shadow-sm">
+                                <i class="bi bi-trash"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <h4 class="text-dark">Tổng tiền: @Model.Sum(i => i.Total).ToString("#,0" + " ₫") </h4>
+            <div style="justify-content: space-between">
+                @Html.ActionLink("Tiếp tục mua sắm", "Index", "Product", null, new { @class = "btn btn-secondary mr-2" })
+                <a href="@Url.Action("Checkout", "Cart")" class="btn btn-success">Mua hàng</a>
+            </div>
+        </div>
+        
+    </div>
+}
+
+        <style>
+            body {
+                background-color: #D4F6FF;
+            }
+
+            img {
+                width: 100px;
+                height: auto;
+            }
+
+            table {
+                margin-top: 20px;
+            }
+
+            .btn-warning {
+                background-color: #f0ad4e;
+                color: white;
+            }
+
+                .btn-warning:hover {
+                    background-color: #ec971f;
+                }
+
+            .btn-success {
+                background-color: #5cb85c;
+                color: white;
+            }
+
+                .btn-success:hover {
+                    background-color: #4cae4c;
+                }
+
+            .btn-secondary {
+                background-color: #6c757d;
+                color: white;
+            }
+
+                .btn-secondary:hover {
+                    background-color: #5a6268;
+                }
+
+            .table th, .table td {
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .table td {
+                padding: 10px;
+            }
+
+            .table-bordered th, .table-bordered td {
+                border: 1px solid #ddd;
+            }
+
+            .table-dark {
+                background-color: #343a40;
+                color: white;
+            }
+
+                .table-dark th {
+                    color: white;
+                }
+
+            .txtName {
+                word-wrap: break-word;
+                white-space: normal;
+                overflow-wrap: break-word;
+                width: 370px
+            }
+
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: #f9f9f9;
+            }
+
+            .table-striped tbody tr:nth-of-type(even) {
+                background-color: #f1f1f1;
+            }
+
+            .text-center img {
+                max-width: 50%;
+            }
+
+            .qtyUpdate {
+                display: flex;
+                align-items: center;
+                margin-right: -50px;
+                margin-left: 30px
+            }
+
+                .qtyUpdate .btn-update {
+                    background-color: transparent; /* Không có nền */
+                    border: none;
+                    padding: 0; /* Loại bỏ khoảng cách xung quanh */
+                    margin-left: 15px;
+                }
+
+                .qtyUpdate .form-control {
+                    margin-bottom: 0;
+                }
+        </style>

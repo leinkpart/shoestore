@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="margin-top: 85px">
+    <h2>Quản lý địa chỉ nhận hàng</h2>
+    <button id="btnAdd" class="btn btn-primary mb-3">Thêm địa chỉ mới</button>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Phường/Xã</th>
+                <th>Quận/Huyện</th>
+                <th>Tỉnh/Thành phố</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody id="addressTable"></tbody>
+    </table>
+    @Html.ActionLink("Quay lại", "Checkout", "Cart",null, new { @class = "btn btn-secondary" })
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addressForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addressModalLabel">Thông tin địa chỉ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="AddressId" name="AddressId">
+                    <div class="mb-3">
+                        <label for="HoTen" class="form-label">Họ tên</label>
+                        <input type="text" id="HoTen" name="HoTen" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DienThoai" class="form-label">Điện thoại</label>
+                        <input type="text" id="DienThoai" name="DienThoai" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DiaChi" class="form-label">Địa chỉ</label>
+                        <input type="text" id="DiaChi" name="DiaChi" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="Xa" class="form-label">Phường/Xã</label>
+                            <input type="text" id="Xa" name="Xa" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Huyen" class="form-label">Quận/Huyện</label>
+                            <input type="text" id="Huyen" name="Huyen" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Tinh" class="form-label">Tỉnh/Thành phố</label>
+                            <input type="text" id="Tinh" name="Tinh" class="form-control" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // Load dữ liệu khi trang tải
+            loadAddresses();
+
+            // Hiển thị danh sách địa chỉ
+            function loadAddresses() {
+                $.get("/DeliveryAddress/GetAllAddresses", function (data) {
+                    let tableContent = "";
+                    data.forEach(address => {
+                        tableContent += `
+                    <tr>
+                        <td>${address.HoTen}</td>
+                        <td>${address.DienThoai}</td>
+                        <td>${address.DiaChi}</td>
+                        <td>${address.Xa}</td>
+                        <td>${address.Huyen}</td>
+                        <td>${address.Tinh}</td>
+                        <td>
+                            <button class="btn btn-primary btnSelect" data-id="${address.AddressId}">Chọn</button>
+                            <button class="btn btn-warning btnEdit" data-id="${address.AddressId}">Sửa</button>
+                            <button class="btn btn-danger btnDelete" data-id="${address.AddressId}">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+                    });
+                    $("#addressTable").html(tableContent);
+                });
+            }
+
+            // Thêm mới hoặc cập nhật địa chỉ
+            $("#addressForm").submit(function (e) {
+                e.preventDefault();
+
+                const formData = $(this).serialize();
+                const id = $("#AddressId").val();
+                const url = id ? "/DeliveryAddress/EditAddress" : "/DeliveryAddress/AddAddress";
+
+                $.post(url, formData, function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        $("#addressModal").modal("hide");
+                        loadAddresses();
+                    }
+                });
+            });
+
+            // Hiển thị modal để sửa
+            $(document).on("click", ".btnEdit", function () {
+                const id = $(this).data("id");
+                $.get(`/DeliveryAddress/GetAddress/${id}`, function (data) {
+                    $("#AddressId").val(data.AddressId);
+                    $("#HoTen").val(data.HoTen);
+                    $("#DienThoai").val(data.DienThoai);
+                    $("#DiaChi").val(data.DiaChi);
+                    $("#Xa").val(data.Xa);
+                    $("#Huyen").val(data.Huyen);
+                    $("#Tinh").val(data.Tinh);
+                    $("#addressModal").modal("show");
+                });
+            });
+
+            // Xóa địa chỉ
+            $(document).on("click", ".btnDelete", function () {
+                const id = $(this).data("id");
+                if (confirm("Bạn có chắc chắn muốn xóa địa chỉ này không?")) {
+                    $.post("/DeliveryAddress/DeleteAddress", { id: id }, function (response) {
+                        alert(response.message);
+                        if (response.success) {
+                            loadAddresses();
+                        }
+                    });
+                }
+            });
+
+            // Xử lý khi nhấn nút "Chọn"
+            $(document).on("click", ".btnSelect", function () {
+                const addressId = $(this).data("id");
+                $.post("/DeliveryAddress/SelectAddress", { id: addressId }, function (response) {
+                    if (response.success) {
+                        //alert("Đã chọn địa chỉ: " + response.address.HoTen);
+                        window.location.href = "/Cart/Checkout"; // Điều hướng đến view Checkout
+                    } else {
+                        alert("Lỗi: " + response.message);
+                    }
+                });
+            });
+
+            // Mở modal thêm mới
+            $("#btnAdd").click(function () {
+                $("#addressForm")[0].reset();
+                $("#AddressId").val("");
+                $("#addressModal").modal("show");
+            });
+        });
+    </script>
+}
+
+

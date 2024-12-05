@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var selectedAddress = ViewBag.SelectedAddress as ShoeStore.Models.DeliveryAddress;
+}
+
+@using ShoeStore.Models
+
+<!-- Thông báo thành công -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="container mt-5">
+    <h2 class="text-header text-center mb-4">Thanh toán</h2>
+
+    <!-- Địa chỉ nhận hàng -->
+    <div class="address-section mb-4 p-4 border rounded shadow-sm">
+        <h4 class="mb-3">Thông tin, địa chỉ nhận hàng</h4>
+        @if (selectedAddress != null)
+        {
+            <p><i class="bi bi-geo-alt-fill" style="color: #1e20f8; font-size: 20px"></i><strong> @selectedAddress.HoTen</strong> | @selectedAddress.DienThoai </p>
+            <p>@selectedAddress.DiaChi</p>
+            <p>@selectedAddress.Xa, @selectedAddress.Huyen, @selectedAddress.Tinh</p>
+        }
+        else
+        {
+            <p>Chưa chọn địa chỉ giao hàng. Vui lòng <a href="/DeliveryAddress" style="text-decoration: none">chọn địa chỉ</a>.</p>
+        }
+
+        <a href="@Url.Action("Index", "DeliveryAddress")" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-plus-circle"></i> Thêm Địa Chỉ Mới
+        </a>
+    </div>
+
+    <!-- Giỏ hàng -->
+    <h4 class="my-4">Thông tin giỏ hàng</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng cộng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/images/@item.ImageURL" alt="@item.Name" class="img-fluid rounded" style="max-width: 75px;" />
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("#,0" + " ₫")</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Total.ToString("#,0" + " ₫")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Phương thức thanh toán -->
+    <h4 class="my-4 text-center">Phương thức thanh toán</h4>
+    <div class="payment-section p-4 border rounded shadow-sm mx-auto col-md-6">
+        <form action="@Url.Action("Checkout", "Cart")" method="post">
+            <div class="form-check mb-3">
+                <input type="radio" class="form-check-input" id="pay-cod" name="thanhtoan" value="cashondelivery" checked>
+                <label class="form-check-label" for="pay-cod">
+                    <i class="bi bi-cash"></i> Thanh toán khi nhận hàng
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="radio" class="form-check-input" id="pay-vnpay" name="thanhtoan" value="vivnpay">
+                <label class="form-check-label" for="pay-vnpay">
+                    <i class="bi bi-wallet2"></i> Thanh toán qua ví VNPay
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="radio" class="form-check-input" id="pay-momo" name="thanhtoan" value="momo">
+                <label class="form-check-label" for="pay-momo">
+                    <i class="bi bi-phone"></i> Thanh toán qua ví MoMo
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="radio" class="form-check-input" id="pay-credit-card" name="thanhtoan" value="creditcard">
+                <label class="form-check-label" for="pay-credit-card">
+                    <i class="bi bi-credit-card"></i> Thanh toán bằng thẻ tín dụng/ghi nợ
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="radio" class="form-check-input" id="pay-paypal" name="thanhtoan" value="paypal">
+                <label class="form-check-label" for="pay-paypal">
+                    <i class="bi bi-paypal"></i> Thanh toán qua PayPal
+                </label>
+            </div>
+
+            <!-- Tổng thanh toán và nút đặt hàng -->
+            <div class="payment mt-4 text-center">
+                <h5>
+                    Tổng thanh toán:
+                    <strong>@string.Format("{0:#,##0,0}", ViewBag.TongTien) VNĐ</strong>
+                </h5>
+                <button type="submit" class="btn btn-success btn-lg mt-3">
+                    Đặt hàng
+                </button>
+            </div>
+        </form>
+    </div>
+   
+    @Html.ActionLink("Quay lại", "GioHang", "Cart", null, new { @class = "btn btn-secondary" })
+</div>
+
+<style>
+    body {
+        background-color: #f3f7f9;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+        max-width: 900px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-header {
+        color: #007bff;
+        font-weight: bold;
+        font-size: 2rem;
+    }
+
+    .address-section {
+        background: #fdfdfe;
+        border-left: 5px solid #007bff;
+    }
+
+    .payment-section {
+        background: #ffffff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+        .payment-section i {
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+    .form-check-input {
+        margin-right: 10px;
+    }
+
+    .payment h5 {
+        color: #555;
+        font-weight: bold;
+    }
+
+    .btn {
+        border-radius: 20px;
+        padding: 10px 30px;
+    }
+
+</style>

@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "ThankYou";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="max-width: 600px; margin: auto; margin-top: 85px">
+    <div class="text-center mb-3">
+        <h2 class="display-5 text-success">XÁC NHẬN ĐƠN HÀNG</h2>
+        <h5 class="text-muted">Đơn hàng của quý khách đã được ghi nhận,</h5>
+        <h6 class="text-muted">chúng tôi sẽ liên hệ quý khách trong thời gian sớm nhất và giao hàng đúng hẹn.</h6>
+    </div>
+
+    <div class="alert alert-info text-center" role="alert" style="border-radius: 15px; padding: 15px; max-width: 500px; margin: auto;">
+        <p class="lead">@Html.Raw(ViewBag.Message)</p>
+        <p class="mb-0">Chi tiết đơn hàng đã được gửi tới email của bạn.</p>
+        <img src="https://i.imgur.com/RIqMCZB.jpeg" alt="Hình ảnh xác nhận đơn hàng" class="img-fluid mb-3" style="width: 40%; max-width: 250px; height: auto; border-radius: 20px;">
+    </div>
+
+    <div class="text-center mt-3">
+        @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "btn btn-primary btn-lg animated-button" })
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .btn {
+        margin-top: 25px;
+    }
+
+    .animated-button {
+        transition: transform 0.2s, background-color 0.3s;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+        .animated-button:hover {
+            transform: scale(1.05);
+            background-color: #007bff;
+            color: white;
+        }
+
+    h2, h4 {
+        transition: color 0.3s;
+        font-weight: 500;
+    }
+
+        h2:hover, h4:hover {
+            color: #28a745;
+        }
+
+    .alert {
+        transition: background-color 0.3s;
+        padding: 15px;
+        font-size: 16px;
+        border-radius: 15px;
+    }
+
+        .alert:hover {
+            background-color: #e0f7fa;
+        }
+</style>
+

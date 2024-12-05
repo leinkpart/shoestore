@@ -1,0 +1,58 @@
+﻿@model ShoeStore.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2 class="text-center text-primary">Chi tiết sản phẩm</h2>
+
+    <div class="card shadow-sm mt-4">
+        <div class="row g-0">
+            <!-- Image Section -->
+            <div class="col-md-4">
+                <img src="~/images/@Model.ImageURL" class="img-fluid rounded-start" alt="@Model.Name" style="max-height: 300px; object-fit: cover;">
+            </div>
+            <!-- Details Section -->
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h4 class="card-title text-success">@Model.Name</h4>
+                    <p class="card-text text-muted">@Model.Description</p>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Giá:</strong> @Model.Price.ToString("#,0" + " ₫")</li>
+                        <li class="list-group-item"><strong>Tồn kho:</strong> @Model.Stock</li>
+                        <li class="list-group-item"><strong>Màu sắc:</strong> @Model.Color</li>
+                        <li class="list-group-item"><strong>Thương hiệu:</strong> @Model.Brand.Name</li>
+                        <li class="list-group-item"><strong>Ngày cập nhật:</strong> @Html.FormatValue(Model.UpdatedAt, "{0:dd/MM/yyyy}")</li>
+                    </ul>
+
+                    <div class="mt-3">
+                        <a href="@Url.Action("AddToCart", "Cart", new { id = Model.ProductID,  url = Request.Url.ToString() })" class="btn btn-primary">
+                            Thêm vào giỏ hàng
+                        </a>
+
+                        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #D4F6FF;
+    }
+
+    .container {
+        margin-top: 80px;
+    }
+
+    img {
+        width: 320px;
+        height: auto;
+        margin: 10px
+    }
+</style>

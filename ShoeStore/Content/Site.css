@@ -1,0 +1,60 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.carousel-item {
+    transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+.carousel-item-next,
+.carousel-item-prev {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.carousel-item-start,
+.carousel-item-end {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.carousel-fade .carousel-item {
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+    .carousel-fade .carousel-item.active {
+        opacity: 1;
+        transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+    }
+
+/*footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #343a40;*/ /* Màu nền tối */
+/*}
+
+    footer a {
+        color: #adb5bd;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        footer a:hover {
+            color: #ffc107;*/ /* Màu vàng khi hover */
+        /*}
+
+    footer .bi {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+    }*/
+
